@@ -6,18 +6,26 @@ class Student {
     }
 
     describe() {  //describe the student
-        //console.log(`${this.fulName} receives ${this.grade}`)
+        //console.log(`${this.fullName} receives ${this.grade}`)
         return `${this.fullName} receives ${this.grade}`; //output is that student'sfullName 
         //in this Student class receives a grade
     }
 }
-class Classroom { // name of class is Classroom
-    constructor(subject) { // creation of subject inside of the Classroom
-        this.subject = subject; //the subject in this classroom is called subject
-        this.students = []; // array (list) of students are in this classroom
+
+/**
+ * Classroom
+ * initial parameters: subject string 
+ * 
+ * Description:
+ * Classroom is a class of variables and functions that document the subject of a class  and a list of attending students 
+ */
+class Classroom {
+    constructor(subject) {
+        this.subject = subject;
+        this.students = [];
     }
 
-    addStudent(student) {
+    addStudent(student) { //function is called addStudent
         if (student instanceof Student) { // making sure that only student can be added to the array
             this.students.push(student); //it adds the student to the list of students
         } else {
@@ -26,35 +34,40 @@ argument is not a student: ${student}`);
         }
     }
 
-    describe() {
-        return `${this.subject} has ${this.students.length} students.`; //output- in this Classroom
-        //subject (can be science) it has this number of students
+    describe() { //this is a template of a function that describe a classroom and number 
+        //of students attending the classroom
+
+        return `${this.subject} has ${this.students.length} students.`;
     }
 }
-class Menu { // what drives the application and our choices
-    constructor() { //we pick up choices like subjects: ex. science, physics
+//main class menu of application allows adding or removing classroom
+class Menu {
+    /* constructor assignes an empty array of classroom 
+       and set the selectedClassroom to null */
+    constructor() {
         this.classrooms = [];// list of classroom in this Menu
         this.selectedClassroom = null; // manage one classroom at a time //one selected subject
         // at a time from this menu, it has nothing in the begining
     }
 
-    start() { // entry point to application
-        let selection = this.showMainMenuOptions(); //showMainMenuOptions is a method in the 
-        //class Menue
-        while (selection != 0) { //when user pick an option that is not zero
-            switch (selection) { // if the user switch it to 1
-                case '1':
-                    this.createClassroom();// after it creates the classroom 
+    start() {
+        // showMainMenuOptions is a method in the class Menu
+        let selection = this.showMainMenuOptions();
+
+        while (selection != 0) { // the application will continue to run until the user pick zero
+            switch (selection) {
+                case '1': // Option 1: create classroom
+                    this.createClassroom();
                     break;
                 //it will break and goes /select a new selection which is in line 62
                 case '2':
-                    this.viewClassroom();
+                    this.viewClassroom(); //this method is calling to view a classroom
                     break;
                 case '3':
-                    this.deleteClassroom();
+                    this.deleteClassroom(); //this method is calling to delete a classroom
                     break;
                 case '4':
-                    this.displayClassrooms();
+                    this.displayClassrooms(); ////this method is calling to display a classroom
                     break;
                 default:
                     selection = 0; //when selection is equal zero, you alert Goodbye
@@ -66,8 +79,8 @@ class Menu { // what drives the application and our choices
     }
 
 
-    showMainMenuOptions() { // name of the method, and prompt means what do I the user wants 
-        //to pick inside the method (they can choose: 1,2,3,4 or 0)
+    showMainMenuOptions() { // this method prompt the user to pick an option from this menu  
+        //(the user can choose: 1,2,3,4 or 0)
         return prompt(` 
 0) exit
 1) create a new classroom
@@ -77,56 +90,58 @@ class Menu { // what drives the application and our choices
 `);
     }
 
-    showClassroomMenuOptions(classroomInfo) { // aske the user what pick here?
+    showClassroomMenuOptions(classroomInfo) { //it asks the user what to pick here? (0, 1 or 2)
         return prompt(`
 0) back
 1) add a new student
 2) delete a student
 -----------------
 ${classroomInfo}
-`);// it wqill show the clasrom info (how many students, name of students, and subjects)
+`);// it will print the clasroom info (how many students, name of students, and subjects)
     }
 
-    displayClassrooms() {// it displays the subjects here
-        let classroomString = ''; //contains all info about the classroom
-        for (let i = 0; i < this.classrooms.length; i++) {// i represents index in the 
-            //array of classrooms, each classroom has a subject
-            classroomString += i + ') ' + this.classrooms[i].subject + '\n';
-            //index in displayClassrooms array + the name of the subject in this array 
-            //of displayClassrooms
+    displayClassrooms() {
+        let classroomString = ''; //this variable will contains all subjects info
+        for (let i = 0; i < this.classrooms.length; i++) {// it loops over the classroom list and appends (puting string together) the subject 
+            // of each classroom to a string(add to the end of a list)
+
+            classroomString += i + ') ' + this.classrooms[i].subject + '\n';// it adds the index and the classroom subject into the variable
+
         }
-        alert(classroomString);// show what is inside the classroomString
+        alert(classroomString);// show on the screen what is inside the classroomString, 
+        //it shows the index plus the name of the subject on the screen
     }
 
-    createClassroom() { //we are getting the subject (we write the name of subject)
+    //it is a function that create  a new classroom and put the new subject into array
+    createClassroom() {
         let subject = prompt('Enter subject for new classroom: ');
-        this.classrooms.push(new Classroom(subject));// adding of the new classroom subject to the new 
-        //Classrooms array which is in this class Menu
+        this.classrooms.push(new Classroom(subject));
     }
 
     viewClassroom() {
+        //The user selects the index of the subject
         let index = prompt("Enter the index of the classroom that you want to view:");
         if (index > -1 && index < this.classrooms.length) {
             this.selectedClassroom = this.classrooms[index];
-            //selection of the subjects' intex
+
+            // add the subject to the variable description - for example: "Classroom subject: science"
             let description = 'Classroom Subject: ' + this.selectedClassroom.subject + '\n';
-            //add the subject into descriptio - classroom subject + science (for example)
-            description += ' ' + this.selectedClassroom.describe() + '\n ';
+
             //in addition to the subject, the description is added too
+            description += ' ' + this.selectedClassroom.describe() + '\n ';
+
+            // loop over the list of students and append the students description
             for (let i = 0; i < this.selectedClassroom.students.length; i++) {
-                // description += i + ') ' + this.selectedClassroom.students[i].subject + ' - '
-                // + this.selectedClassroom.students[i].grade + '\n';
-                description += i + ') ' + this.selectedClassroom.students[i].describe() + '\n';
-                //write the information of student that in that classroom (science classrom ex.)
+                description += i + ') ' + this.selectedClassroom.students[i].describe() + '\n'; //ie: description += "1) John Doe recieves A"
             }
-            let selection1 = this.showClassroomMenuOptions(description);
+            let selectionCR = this.showClassroomMenuOptions(description);
             //look at options of classroom
-            switch (selection1) {
+            switch (selectionCR) {
                 case '1':
-                    this.createStudent();// option 1 is to add student
+                    this.createStudent();// option 1 is to call (use) the method to add student
                     break;
                 case '2':
-                    this.deleteStudent(); //option 2 is to delete student
+                    this.deleteStudent(); //option 2 is to the method to delete student
             }
         } // validate user input
     }
@@ -153,5 +168,5 @@ ${classroomInfo}
         }
     }
 }
-let menu = new Menu();
-menu.start();
+let menu = new Menu();// creates the menu
+menu.start();// and start the program
